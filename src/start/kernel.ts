@@ -8,7 +8,9 @@ import { handles } from "../app/Exceptions/Handles";
 import { Input } from "../contracts/Input";
 import { ContextController, ContextServices, getServices, setServices } from '../Bin/ContexController'
 import { Auth } from "../contracts/Auth";
-import { Database, People } from "../contracts/Database";
+import { Database } from "../contracts/Database";
+import { People, User } from "../contracts/Models";
+import sequelize from "sequelize";
 
 // La clase kernel tiene como objetivo 
 // contener toda la configuración de la API
@@ -110,16 +112,24 @@ export class kernel {
     // Contiene la configuración de la inicialización 
     // de nuestra API
     public start() {
-        console.log(__dirname)
+
+
         const database = new Database({
-           dialect: 'sqlite', storage: __dirname+'/../database/data.data', models: [People]
+           dialect: 'sqlite', storage: __dirname+'/../database/data.data', models: [People, User]
         })
 
-        database.sync({ force: true }).then(result => {
-            console.log('Tablas creadas')
-        })
-        
+        // database.transaction(async () => {
+        //     const people = await People.create({ name: 'Filiberto Pérez López' })
+        //     if(people.pkPeople != undefined) {
+        //         const user = await User.create({ fkPeople: people.pkPeople, password: 'MyPassword', username: 'Operador 1',  })
+        //         console.log(user)
+        //     }
+        // })
 
+        // People.findOne({ where: { pkPeople: 1 } ,include: { model: User } }).then(result => {
+        //     console.log(result?.User)
+        // })
+  
         this.App.listen(this.Port, () => {
             console.log('API start in port: ' + this.Port);
         })

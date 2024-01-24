@@ -1,5 +1,8 @@
-import { Sequelize, ModelCtor, Model, Table, Column, CreatedAt, PrimaryKey, AutoIncrement, UpdatedAt, DataType } from 'sequelize-typescript'
-// import {} from 
+import { 
+    Sequelize, ModelCtor
+} from 'sequelize-typescript'
+
+import fs from 'fs'
 
 const model: Record<string, ModelCtor> = {}
 
@@ -13,37 +16,19 @@ enum dialects {
 export class Database extends Sequelize {
     
     public constructor(data: { database?: string, dialect: string, username?: string, password?: string, storage?: string, models?: ModelCtor[] }) {
-        super({ database: data.database, dialect: data.dialect as dialects, password: data.password, models: data.models })
+        super({ database: data.database, dialect: data.dialect as dialects, password: data.password, models: data.models, storage: data.storage })
+
+        if(data.storage != undefined) {
+            if(!fs.existsSync(data.storage)){
+                this.sync({ force: true }).then(result => {
+                    console.log(`<< Database SQLITE3 initialize >>`)
+                })
+            }
+        }
+    }
+
+    public async reload() {
+        await this.sync({ force: true })
     }
 }
 
-interface IPeople {
-    pkPeople?: number,
-    name: string, 
-    createdAt?: Date, 
-    updatedAt?:Date
-}
-
-export class ValidatorPeople {
-    
-}
-
-@Table
-export class People extends Model<IPeople> {
-    
-    @PrimaryKey
-    @AutoIncrement
-    @Column(DataType.INTEGER)
-    pkPeople!: number
-
-    @Column(DataType.STRING)
-    name!:string
-
-    @CreatedAt
-    @Column(DataType.DATE)
-    createdAt?: Date;
-
-    @UpdatedAt
-    @Column(DataType.DATE)
-    updatedAt?: Date;
-}
