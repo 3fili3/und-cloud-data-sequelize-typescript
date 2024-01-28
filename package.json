@@ -7,7 +7,7 @@
     "dev": "ts-node-dev ./src/index.ts"
   },
   "files": [
-    "build",
+    "dist",
     "index.d.ts"
   ],
   "types": "index.d.ts",

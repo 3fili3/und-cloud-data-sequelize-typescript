@@ -1,4 +1,4 @@
-declare module 'und-data-cloud-mysql' {
+declare module 'und-data-cloud-sequelize' {
     
     import { Application } from 'express'
     import { PrismaClient } from '@prisma/client'
