@@ -2,7 +2,7 @@
   "name": "und-data-cloud-sequelize",
   "version": "1.0.0",
   "description": "",
-  "main": "./build/index.js",
+  "main": "./dist/index.js",
   "scripts": {
     "dev": "ts-node-dev ./src/index.ts"
   },
