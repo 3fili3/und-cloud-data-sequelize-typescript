@@ -1,5 +1,5 @@
 {
-  "name": "und-data-cloud-mysql",
+  "name": "und-data-cloud-sequelize",
   "version": "1.0.0",
   "description": "",
   "main": "./build/index.js",
