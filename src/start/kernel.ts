@@ -112,24 +112,6 @@ export class kernel {
     // Contiene la configuración de la inicialización 
     // de nuestra API
     public start() {
-
-
-        const database = new Database({
-           dialect: 'sqlite', storage: __dirname+'/../database/data.data', models: [People, User]
-        })
-
-        // database.transaction(async () => {
-        //     const people = await People.create({ name: 'Filiberto Pérez López' })
-        //     if(people.pkPeople != undefined) {
-        //         const user = await User.create({ fkPeople: people.pkPeople, password: 'MyPassword', username: 'Operador 1',  })
-        //         console.log(user)
-        //     }
-        // })
-
-        // People.findOne({ where: { pkPeople: 1 } ,include: { model: User } }).then(result => {
-        //     console.log(result?.User)
-        // })
-  
         this.App.listen(this.Port, () => {
             console.log('API start in port: ' + this.Port);
         })

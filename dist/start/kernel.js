@@ -43,8 +43,6 @@ const express_1 = __importStar(require("express"));
 const Handles_1 = require("../app/Exceptions/Handles");
 const Input_1 = require("../contracts/Input");
 const ContexController_1 = require("../Bin/ContexController");
-const Database_1 = require("../contracts/Database");
-const Models_1 = require("../contracts/Models");
 // La clase kernel tiene como objetivo 
 // contener toda la configuración de la API
 // Se usa el patron de diseño Builder
@@ -122,19 +120,6 @@ class kernel {
     // Contiene la configuración de la inicialización 
     // de nuestra API
     start() {
-        const database = new Database_1.Database({
-            dialect: 'sqlite', storage: __dirname + '/../database/data.data', models: [Models_1.People, Models_1.User]
-        });
-        // database.transaction(async () => {
-        //     const people = await People.create({ name: 'Filiberto Pérez López' })
-        //     if(people.pkPeople != undefined) {
-        //         const user = await User.create({ fkPeople: people.pkPeople, password: 'MyPassword', username: 'Operador 1',  })
-        //         console.log(user)
-        //     }
-        // })
-        // People.findOne({ where: { pkPeople: 1 } ,include: { model: User } }).then(result => {
-        //     console.log(result?.User)
-        // })
         this.App.listen(this.Port, () => {
             console.log('API start in port: ' + this.Port);
         });
