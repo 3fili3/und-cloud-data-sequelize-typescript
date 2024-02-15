@@ -20,7 +20,7 @@ declare module 'und-data-cloud-sequelize' {
         getApp(): Application;
         auth(data: { PropiedUser: string; PropiedPassword: string; NameModel: string; PropiedsSave?: string[] }): kernel
         controllers(controllers: Record<string, any>): kernel
-        webSocket(data: { port: number; path: string; cors: string[] }): void
+        webSocket(data: { port: number; path: string; cors: string[] }): WebSocket
         services(serivice: Record<string, any>): kernel
         constructor(data: { port: number, domain: string, urlDatabase: string })
         configFile(destination: string): kernel
