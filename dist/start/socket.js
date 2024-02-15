@@ -17,10 +17,10 @@ class WebSocket {
         this.SocketServer = null;
         if (WebSocket.Instance === null) {
             WebSocket.Instance = this;
-            WebSocket.Instance.AppSocket = (0, express_1.default)();
-            WebSocket.Instance.AppSocket.use((0, cors_1.default)());
-            WebSocket.Instance.AppSocket.use(express_1.default.json());
-            WebSocket.Instance.serverHttp = http_1.default.createServer(WebSocket.Instance.AppSocket);
+            WebSocket.Instance.appSocket = (0, express_1.default)();
+            WebSocket.Instance.appSocket.use((0, cors_1.default)());
+            WebSocket.Instance.appSocket.use(express_1.default.json());
+            WebSocket.Instance.serverHttp = http_1.default.createServer(WebSocket.Instance.appSocket);
             WebSocket.Instance.SocketServer = new socket_io_1.Server(WebSocket.Instance.getServerSocket, { cors: data.cors, path: data.path });
             this.SocketServer.listen(data.port);
             console.log('Server websocket start in port: ' + data.port);
