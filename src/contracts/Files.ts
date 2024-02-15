@@ -6,29 +6,48 @@ import path from 'path'
 import { ENV } from '../config/Env'
 import fs from 'fs'
 
-// const __dirname = path.resolve();
+export interface IFile {
+    fieldname: string;
+    originalname: string;
+    encoding: string;
+    mimetype: string;
+    size: number;
+    destination: string;
+    filename: string;
+    path: string;
+    buffer: Buffer;
+}
 
 type TypeActionMake = 'folder' | 'file'
 
 export class Files {
     // Destino donde se va guardar facturas enviadas del vendedor
-    public static destination = path.join(`${__dirname}/${ENV.path_file}`)
-    public static UploadFiles = multer({ dest: this.destination, storage: multer.memoryStorage() })
+    public static destination = path.join(`${__dirname}/buket`)
+    public static UploadFiles = multer({ dest: Files.destination, storage: multer.memoryStorage() })
 
-    public static make(type: TypeActionMake, path: string) {
+    public make(type: TypeActionMake, path: string, file?: any): string {
         try {
             switch (type) {
                 case 'folder':
                     fs.mkdirSync(`${Files.destination}${path}`)
                 break;
                 case 'file': 
+                    fs.writeFileSync(`${Files.destination}${path}`, file)
                 break;
                 default:
                     throw({ message: 'No existe la acción make de Files', status: 501 })
                 break;
             }
+            return path
         } catch (error) {
             throw({ message: 'Error al crear Directorio de Usuario', status: 501 })
         }
+        
     }
+
+    public static config(data: { destination: string }) {
+        Files.destination = data.destination
+        Files.UploadFiles = multer({ storage: multer.memoryStorage(), dest: data.destination })
+    }
+
 }

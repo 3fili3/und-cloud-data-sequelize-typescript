@@ -1,17 +1,26 @@
-declare module 'und-data-cloud-sequelize' {
+declare module 'und-data-cloud-mysql' {
     
-    import { Application } from 'express'
-    import { PrismaClient } from '@prisma/client'
+    import express,{ Application } from 'express'
+    import { Connection } from 'mongoose'
+
+    export class Database {
+        constructor(url: string): void
+        set conntection(connection: Connection): void
+        get getConnection(): Connection 
+    }
 
     export class kernel {
-        middlewares(): kernel;
+        middlewares(otherMiddleware?: ((app: Application, expressParams: typeof express) => Application) | undefined): kernel;
         start(): void
         getApp(): Application;
-        auth(data: { PropiedUser: string; PropiedPassword: string; NameModel: string; }): kernel
+        auth(data: { PropiedUser: string; PropiedPassword: string; NameModel: string; PropiedsSave?: string[] }): kernel
         controllers(controllers: Record<string, any>): kernel
-        socket(identity: string): kernel
+        webSocket(data: { port: number; path: string; cors: string[] }): void
         services(serivice: Record<string, any>): kernel
-        constructor(data: { port: number, domain: string })
+        constructor(data: { port: number, domain: string, urlDatabase: string })
+        get databse(): Database
+        configFile(destination: string): kernel
+        get Socket(): WebSocket
     }
 
     interface validates {
@@ -32,11 +41,23 @@ declare module 'und-data-cloud-sequelize' {
           : never;
     };
 
+    interface IFile {
+        fieldname: string;
+        originalname: string;
+        encoding: string;
+        mimetype: string;
+        size: number;
+        destination: string;
+        filename: string;
+        path: string;
+        buffer: Buffer;
+    }
+
     export interface IContextController {
         auth: {
-            LogIn(user: string, password: string): Promise<string>;
+            LogIn<Data>(user: string, password: string, functionGetData?: (data: Data) => Promise<Record<string, string>> ): Promise<string>;
             createdUser(data: any): any
-            getInfoUser(): { id: number }
+            getInfoUser<User>(): User
             getToken(): string
             getAuth(): { id: number }
         };
@@ -54,7 +75,8 @@ declare module 'und-data-cloud-sequelize' {
             key_api: string;
             path_file: string
         },
-}
+        files: IFile[],
+    }
 
     
     export interface IContextServices {
@@ -76,20 +98,22 @@ declare module 'und-data-cloud-sequelize' {
             calculeDate(days: number): Date;
             getRemainingDaysPerMonth(): number;
             getDate(sep?: string): number;
-            getMilisecondsByDate(date: string | Date): number;
-            getCompletedDate(dateString: string | Date): number;
+            getMilisecondsByDate(date: string | Date,): number;
+            getCompletedDate(dateString: string | Date, time?: boolean): string | Date;
             getDaysInMount(date: string | Date): number;
             getInitAndLastDate(): { init: Date, end: Date };
         }; hash: {
             make(data: string):string;
             compare(password: string, password_encryped: string):boolean
         };
-    }cls
+        file: { make(type: TypeActionMake, path: string, file?: any): string }
+    }
     
 
     export const Delete: (path: string) => (target: Object, propertyKey: string, descriptor: PropertyDescriptor) => void
     export const Put: (path: string) => (target: Object, propertyKey: string, descriptor: PropertyDescriptor) => void
     export const Get: (path: string) => (target: Object, propertyKey: string, descriptor: PropertyDescriptor) => void
     export const Post: (path: string) => (target: Object, propertyKey: string, descriptor: PropertyDescriptor) => void
+    export const File: (data: { path: string; method: string; }) => (target: Object, propertyKey: string, descriptor: PropertyDescriptor) => void 
 
 }

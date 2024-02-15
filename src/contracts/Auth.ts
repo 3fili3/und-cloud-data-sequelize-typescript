@@ -83,10 +83,10 @@ export class Auth {
     //     throw({ message: 'No tienes autorización', status: 401 })
     // }
 
-    // public static AuthSocket(token: string)  {
-    //     const user = jwt.verify(token);
-    //     return user;
-    // }
+    public static AuthSocket(token: string)  {
+        const user = jwt.verify(token);
+        return user;
+    }
  
     // public getAuth() {
     //     const user = jwt.verify(Auth.getToken());
@@ -94,28 +94,28 @@ export class Auth {
     //     return user;
     // }
 
-    // public static Auth(req: Request, res: Response, next: NextFunction) {
-    //     Auth.req = req
-    //     Auth.res = res
-    //     Auth.next = next
-    //     next()
-    // }
+    public static Auth(req: Request, res: Response, next: NextFunction) {
+        Auth.req = req
+        Auth.res = res
+        Auth.next = next
+        next()
+    }
 
-    // public static async setAuthModules(model: string) {
-    //    Auth.NameModelModule = model
-    // }
+    public static async setAuthModules(model: string) {
+       Auth.NameModelModule = model
+    }
 
-    // public static Config(data: { PropiedUser: string, PropiedPassword:string, NameModel: string }) {
-    //     Auth.PropiedNameModel = data.NameModel
-    //     Auth.PropiedPassword = data.PropiedPassword
-    //     Auth.PropiedUser = data.PropiedUser
-    // }
+    public static Config(data: { PropiedUser: string, PropiedPassword:string, NameModel: string }) {
+        Auth.PropiedNameModel = data.NameModel
+        Auth.PropiedPassword = data.PropiedPassword
+        Auth.PropiedUser = data.PropiedUser
+    }
 
-    // public static VerifyConfig() {
-    //     if(Auth.PropiedNameModel === '' || Auth.PropiedNameModel === null || Auth.PropiedNameModel === undefined) throw({ message: 'Propiedad nombre de modelo debe ser definido', status: 500 })
-    //     if(Auth.PropiedPassword === '' || Auth.PropiedPassword === null || Auth.PropiedPassword === undefined) throw({ message: 'Propiedad contraseña debe ser definido', status: 500 })
-    //     if(Auth.PropiedUser === '' || Auth.PropiedUser === null || Auth.PropiedUser === undefined) throw({ message: 'Propiedad usuario debe ser definido', status: 500 })
-    // }
+    public static VerifyConfig() {
+        if(Auth.PropiedNameModel === '' || Auth.PropiedNameModel === null || Auth.PropiedNameModel === undefined) throw({ message: 'Propiedad nombre de modelo debe ser definido', status: 500 })
+        if(Auth.PropiedPassword === '' || Auth.PropiedPassword === null || Auth.PropiedPassword === undefined) throw({ message: 'Propiedad contraseña debe ser definido', status: 500 })
+        if(Auth.PropiedUser === '' || Auth.PropiedUser === null || Auth.PropiedUser === undefined) throw({ message: 'Propiedad usuario debe ser definido', status: 500 })
+    }
 }
 
 // Creamos nuestro objeto auth

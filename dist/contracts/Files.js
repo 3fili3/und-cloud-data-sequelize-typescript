@@ -4,34 +4,37 @@
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Files = void 0;
 const multer_1 = __importDefault(require("multer"));
 const path_1 = __importDefault(require("path"));
-const Env_1 = require("../config/Env");
 const fs_1 = __importDefault(require("fs"));
 class Files {
-    static make(type, path) {
+    make(type, path, file) {
         try {
             switch (type) {
                 case 'folder':
-                    fs_1.default.mkdirSync(`${_a.destination}${path}`);
+                    fs_1.default.mkdirSync(`${Files.destination}${path}`);
                     break;
                 case 'file':
+                    fs_1.default.writeFileSync(`${Files.destination}${path}`, file);
                     break;
                 default:
                     throw ({ message: 'No existe la acción make de Files', status: 501 });
                     break;
             }
+            return path;
         }
         catch (error) {
             throw ({ message: 'Error al crear Directorio de Usuario', status: 501 });
         }
     }
+    static config(data) {
+        Files.destination = data.destination;
+        Files.UploadFiles = (0, multer_1.default)({ storage: multer_1.default.memoryStorage(), dest: data.destination });
+    }
 }
 exports.Files = Files;
-_a = Files;
 // Destino donde se va guardar facturas enviadas del vendedor
-Files.destination = path_1.default.join(`${__dirname}/${Env_1.ENV.path_file}`);
-Files.UploadFiles = (0, multer_1.default)({ dest: _a.destination, storage: multer_1.default.memoryStorage() });
+Files.destination = path_1.default.join(`${__dirname}/buket`);
+Files.UploadFiles = (0, multer_1.default)({ dest: Files.destination, storage: multer_1.default.memoryStorage() });

@@ -43,6 +43,9 @@ const express_1 = __importStar(require("express"));
 const Handles_1 = require("../app/Exceptions/Handles");
 const Input_1 = require("../contracts/Input");
 const ContexController_1 = require("../Bin/ContexController");
+const Auth_1 = require("../contracts/Auth");
+const socket_1 = require("./socket");
+const Files_1 = require("../contracts/Files");
 // La clase kernel tiene como objetivo 
 // contener toda la configuración de la API
 // Se usa el patron de diseño Builder
@@ -58,6 +61,7 @@ class kernel {
         // tenemos un atributo de tipo
         // Appplication de express
         this.App = (0, express_1.default)();
+        this.socket = null;
         this.Routers = (0, express_1.Router)();
         this.ErrorConsole = false;
         this.Port = data.port;
@@ -66,15 +70,21 @@ class kernel {
     // El metodo middleware de tipo kernel
     // tiene la configuración de los headers
     // que tendrá nuestra API de express
-    middlewares() {
+    middlewares(otherMiddleware) {
         this.App.use((0, cors_1.default)());
-        // this.App.use(Auth.Auth)
+        this.App.use(Auth_1.Auth.Auth);
         this.App.use(Input_1.Input.setContext);
         this.App.use(express_1.default.json());
         this.App.use(express_1.default.urlencoded({ extended: false }));
         this.App.use(this.Routers);
         this.App.use(Handles_1.handles.error);
+        if (otherMiddleware != undefined) {
+            this.App = otherMiddleware(this.getApp, express_1.default);
+        }
         return this;
+    }
+    get getApp() {
+        return this.App;
     }
     // public socket(identity: string): kernel {
     //     initializeSocket(identity)
@@ -88,48 +98,81 @@ class kernel {
         ContexController_1.ContextController['services'] = Object.assign({}, (0, ContexController_1.getServices)());
         return this;
     }
+    configFile(destination) {
+        Files_1.Files.config({ destination });
+        return this;
+    }
     controllers(controllers) {
         for (const key in controllers) {
             const controller = controllers[key];
             const objectTempController = new controller();
             const controllersTemp = [...objectTempController.constructor.prototype.functions];
             controllersTemp.forEach(methodController => {
-                this.Routers.route((`${this.Domain}${key}${methodController["path"]}`))[methodController['method']]((req, res, next) => __awaiter(this, void 0, void 0, function* () {
-                    try {
-                        res.json({ service: yield methodController['function'](ContexController_1.ContextController) });
-                    }
-                    catch (error) {
-                        if (this.ErrorConsole) {
-                            console.log(error);
+                const fullPath = `${this.Domain}${key}${methodController["path"]}`;
+                if (methodController.file) {
+                    this.Routers.route((fullPath))[methodController['method']](Files_1.Files.UploadFiles.array('files'), (req, res, next) => __awaiter(this, void 0, void 0, function* () {
+                        try {
+                            ContexController_1.ContextController['files'] = req.files;
+                            const response = yield methodController['function'](ContexController_1.ContextController);
+                            if (response.hasOwnProperty('file')) {
+                                return res.sendFile(response.file);
+                            }
+                            return res.json({ service: response });
                         }
-                        next(error);
-                    }
-                }));
+                        catch (error) {
+                            if (this.ErrorConsole) {
+                                console.log(error);
+                            }
+                            next(error);
+                        }
+                    }));
+                }
+                else {
+                    this.Routers.route((fullPath))[methodController['method']]((req, res, next) => __awaiter(this, void 0, void 0, function* () {
+                        try {
+                            const response = yield methodController['function'](ContexController_1.ContextController);
+                            if (response.hasOwnProperty('file')) {
+                                return res.sendFile(response.file);
+                            }
+                            return res.json({ service: response });
+                        }
+                        catch (error) {
+                            if (this.ErrorConsole) {
+                                console.log(error);
+                            }
+                            next(error);
+                        }
+                    }));
+                }
             });
             console.log(`>> Intialize Controller ${key} <<`);
         }
         return this;
     }
     auth(data) {
-        // Auth.Config(data)
+        Auth_1.Auth.Config(data);
         return this;
     }
-    webSocket() {
+    webSocket(data) {
+        this.socket = new socket_1.WebSocket(data);
+    }
+    get Socket() {
+        return this.socket;
     }
     // El metodo start de tipo void
     // Contiene la configuración de la inicialización 
     // de nuestra API
-    start() {
+    start(functionInitialize) {
         this.App.listen(this.Port, () => {
             console.log('API start in port: ' + this.Port);
+            if (functionInitialize != undefined) {
+                functionInitialize();
+            }
         });
     }
     Logger(log) {
         this.ErrorConsole = log;
         return this;
-    }
-    getApp() {
-        return this.App;
     }
 }
 exports.kernel = kernel;

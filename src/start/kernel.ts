@@ -11,6 +11,8 @@ import { Auth } from "../contracts/Auth";
 import { Database } from "../contracts/Database";
 import { People, User } from "../contracts/Models";
 import sequelize from "sequelize";
+import { WebSocket } from "./socket";
+import { Files, IFile } from "../contracts/Files";
 
 // La clase kernel tiene como objetivo 
 // contener toda la configuración de la API
@@ -28,28 +30,36 @@ export class kernel {
     private ErrorConsole: boolean;
     private Port: number;
     private Domain: string;
+    private socket: WebSocket = null as any
 
-    public constructor(data: { port: number, domain: string }) {
+    public constructor(data: { port: number, domain: string, urlDatabase: string }) {
         this.Routers = Router()
         this.ErrorConsole = false
         this.Port = data.port
         this.Domain = data.domain
     }
-    
+
     // El metodo middleware de tipo kernel
     // tiene la configuración de los headers
     // que tendrá nuestra API de express
-    public middlewares(): kernel {
+    public middlewares(otherMiddleware?: (app: Application, expressParams: typeof express) => Application): kernel {
 
         this.App.use(cors())
-        // this.App.use(Auth.Auth)
+        this.App.use(Auth.Auth)
         this.App.use(Input.setContext)
         this.App.use(express.json());
         this.App.use(express.urlencoded({ extended: false }))
         this.App.use(this.Routers)
         this.App.use(handles.error)
+        if(otherMiddleware != undefined) {
+            this.App = otherMiddleware(this.getApp, express)
+        }
 
         return this;
+    }
+
+    get getApp() {
+        return this.App
     }
 
     // public socket(identity: string): kernel {
@@ -71,6 +81,11 @@ export class kernel {
         return this
     }
 
+    public configFile(destination: string): kernel {
+        Files.config({ destination })
+        return this
+    }
+
     public controllers(controllers: Record<string, ObjectConstructor> ) {
 
         for (const key in controllers) {
@@ -78,19 +93,42 @@ export class kernel {
             const controller = controllers[key]
             const objectTempController = new controller()
             const controllersTemp = [ ... objectTempController.constructor.prototype.functions ]
-            
             controllersTemp.forEach(methodController => {
-                this.Routers.route((`${this.Domain}${key}${methodController["path"]}`))[methodController['method'] as Mehtods]
-                (async (req, res, next) => {
-                    try {
-                        res.json({ service: await methodController['function'](ContextController) })
-                    } catch (error) {
-                        if(this.ErrorConsole) {
-                            console.log(error)
+                const fullPath = `${this.Domain}${key}${methodController["path"]}`
+                if(methodController.file) {
+                    this.Routers.route((fullPath))[methodController['method'] as Mehtods]
+                        (Files.UploadFiles.array('files'), async (req, res, next) => {
+                            try {
+                                ContextController['files'] = req.files as IFile[]
+                                const response = await methodController['function'](ContextController)
+                                if(response.hasOwnProperty('file')) {
+                                    return res.sendFile(response.file)
+                                }
+                                return res.json({ service: response })
+                            } catch (error) {
+                                if(this.ErrorConsole) {
+                                    console.log(error)
+                                }
+                                next(error)
+                            }
+                        })
+                } else {
+                    this.Routers.route((fullPath))[methodController['method'] as Mehtods]
+                    (async (req, res, next) => {
+                        try {
+                            const response = await methodController['function'](ContextController)
+                            if(response.hasOwnProperty('file')) {
+                                return res.sendFile(response.file)
+                            }
+                            return res.json({ service: response })
+                        } catch (error) {
+                            if(this.ErrorConsole) {
+                                console.log(error)
+                            }
+                            next(error)
                         }
-                        next(error)
-                    }
-                })
+                    })
+                }
             })
 
             console.log(`>> Intialize Controller ${key} <<`)
@@ -99,31 +137,35 @@ export class kernel {
         return this
     }
 
-    public auth(data: { PropiedUser: string, PropiedPassword:string, NameModel: string }) {
-        // Auth.Config(data)
+    public auth(data: { PropiedUser: string, PropiedPassword:string, NameModel: string, PropiedsSave: string[] }) {
+        Auth.Config(data)
         return this
     }
 
-    public webSocket() {
+    public webSocket(data: { port: number, path: string, cors: string[] }) {
+        this.socket = new WebSocket(data)
+    }
 
+    get Socket() {
+        return this.socket
     }
 
     // El metodo start de tipo void
     // Contiene la configuración de la inicialización 
     // de nuestra API
-    public start() {
+    public start(functionInitialize?: () => void) {
+
         this.App.listen(this.Port, () => {
             console.log('API start in port: ' + this.Port);
+            if(functionInitialize != undefined) {
+                functionInitialize()
+            }
         })
     }
 
     public Logger(log: boolean): kernel {
         this.ErrorConsole = log
         return this
-    }
-
-    public getApp(): Application {
-        return this.App;
     }
 
 }

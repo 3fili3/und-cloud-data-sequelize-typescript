@@ -13,7 +13,7 @@ const Hash_1 = require("../contracts/Hash");
 exports.ContextController = {
     auth: new Auth_1.Auth(), functions: new Functions_1.Functions(),
     logger: new Logger_1.Logger(), env: Env_1.ENV, input: Input_1.input,
-    services: {}
+    services: {}, files: []
 };
 exports.ContextServices = {
     code: new Code_1.Code(), functions: new Functions_1.Functions(), logger: new Logger_1.Logger(),
