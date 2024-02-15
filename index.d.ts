@@ -1,4 +1,4 @@
-declare module 'und-data-cloud-mysql' {
+declare module 'und-data-cloud-sequelize' {
     
     import express,{ Application } from 'express'
     import { Connection } from 'mongoose'
