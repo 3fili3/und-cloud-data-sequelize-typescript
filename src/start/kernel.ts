@@ -142,13 +142,10 @@ export class kernel {
         return this
     }
 
-    public webSocket(data: { port: number, path: string, cors: string[] }) {
-        this.socket = new WebSocket(data)
+    public webSocket(data: { port: number, path: string, cors: string[] }): WebSocket {
+        return this.socket = new WebSocket(data)
     }
 
-    get Socket() {
-        return this.socket
-    }
 
     // El metodo start de tipo void
     // Contiene la configuración de la inicialización 

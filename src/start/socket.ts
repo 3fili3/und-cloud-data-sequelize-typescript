@@ -8,43 +8,43 @@ export class WebSocket {
 
     private appSocket: Application = null as any
     private static Instance: WebSocket = null as any
-    private serverHttp: typeof createServer = null as any
     private SocketServer: Server = null as any
 
     public constructor(data: { port: number, path: string, cors: string[] }) {
         if(WebSocket.Instance === null) {
             WebSocket.Instance = this
+            const app = express()
             WebSocket.Instance.appSocket = express()
-            WebSocket.Instance.appSocket.use(cors())
-            WebSocket.Instance.appSocket.use(express.json())
-            WebSocket.Instance.serverHttp = http.createServer(WebSocket.Instance.appSocket) as any
-            WebSocket.Instance.SocketServer = new Server(WebSocket.Instance.getServerSocket as any, { cors: data.cors as any, path: data.path })
-            this.SocketServer.listen(data.port)
+            app.use(cors())
+            app.use(express.json())
+            const createServer = http.createServer(app)
+            WebSocket.Instance.SocketServer = new Server(createServer, { cors: data.cors as any, path: data.path })
+            WebSocket.Instance.SocketServer.listen(data.port)
             console.log('Server websocket start in port: '+data.port)
         }
     }
 
-    set AppSocket(app: Application) { 
-        WebSocket.Instance.appSocket = app
-    }
+    // set AppSocket(app: Application) { 
+    //     WebSocket.Instance.appSocket = app
+    // }
 
-    set ServerSocket(server: typeof createServer) {
-        WebSocket.Instance.serverHttp = server
-    }
+    // set ServerSocket(server: typeof createServer) {
+    //     WebSocket.Instance.serverHttp = server
+    // }
 
-    get getServerSocket() {
-        return WebSocket.Instance.serverHttp
-    }
+    // get getServerSocket() {
+    //     return WebSocket.Instance.serverHttp
+    // }
 
-    get getAppSocket() {
-        return WebSocket.Instance.appSocket
-    }
+    // get getAppSocket() {
+    //     return WebSocket.Instance.appSocket
+    // }
 
-    set socketServer(socket: Server) {
-        WebSocket.Instance.SocketServer = socket
-    }
+    // set socketServer(socket: Server) {
+    //     WebSocket.Instance.SocketServer = socket
+    // }
 
-    get getSocketServer() {
+    get stocket() {
         return WebSocket.Instance.SocketServer
     }
 }

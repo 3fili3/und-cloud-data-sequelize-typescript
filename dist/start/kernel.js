@@ -154,10 +154,7 @@ class kernel {
         return this;
     }
     webSocket(data) {
-        this.socket = new socket_1.WebSocket(data);
-    }
-    get Socket() {
-        return this.socket;
+        return this.socket = new socket_1.WebSocket(data);
     }
     // El metodo start de tipo void
     // Contiene la configuración de la inicialización 

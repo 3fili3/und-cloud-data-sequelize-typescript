@@ -13,35 +13,35 @@ Object.defineProperty(exports, "Socket", { enumerable: true, get: function () { 
 class WebSocket {
     constructor(data) {
         this.appSocket = null;
-        this.serverHttp = null;
         this.SocketServer = null;
         if (WebSocket.Instance === null) {
             WebSocket.Instance = this;
+            const app = (0, express_1.default)();
             WebSocket.Instance.appSocket = (0, express_1.default)();
-            WebSocket.Instance.appSocket.use((0, cors_1.default)());
-            WebSocket.Instance.appSocket.use(express_1.default.json());
-            WebSocket.Instance.serverHttp = http_1.default.createServer(WebSocket.Instance.appSocket);
-            WebSocket.Instance.SocketServer = new socket_io_1.Server(WebSocket.Instance.getServerSocket, { cors: data.cors, path: data.path });
-            this.SocketServer.listen(data.port);
+            app.use((0, cors_1.default)());
+            app.use(express_1.default.json());
+            const createServer = http_1.default.createServer(app);
+            WebSocket.Instance.SocketServer = new socket_io_1.Server(createServer, { cors: data.cors, path: data.path });
+            WebSocket.Instance.SocketServer.listen(data.port);
             console.log('Server websocket start in port: ' + data.port);
         }
     }
-    set AppSocket(app) {
-        WebSocket.Instance.appSocket = app;
-    }
-    set ServerSocket(server) {
-        WebSocket.Instance.serverHttp = server;
-    }
-    get getServerSocket() {
-        return WebSocket.Instance.serverHttp;
-    }
-    get getAppSocket() {
-        return WebSocket.Instance.appSocket;
-    }
-    set socketServer(socket) {
-        WebSocket.Instance.SocketServer = socket;
-    }
-    get getSocketServer() {
+    // set AppSocket(app: Application) { 
+    //     WebSocket.Instance.appSocket = app
+    // }
+    // set ServerSocket(server: typeof createServer) {
+    //     WebSocket.Instance.serverHttp = server
+    // }
+    // get getServerSocket() {
+    //     return WebSocket.Instance.serverHttp
+    // }
+    // get getAppSocket() {
+    //     return WebSocket.Instance.appSocket
+    // }
+    // set socketServer(socket: Server) {
+    //     WebSocket.Instance.SocketServer = socket
+    // }
+    get stocket() {
         return WebSocket.Instance.SocketServer;
     }
 }
