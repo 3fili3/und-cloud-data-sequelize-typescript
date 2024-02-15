@@ -2,11 +2,16 @@ declare module 'und-data-cloud-sequelize' {
     
     import express,{ Application } from 'express'
     import { Connection } from 'mongoose'
+    import { Server } from 'socket.io'
+    export { Socket } from 'socket.io'
 
-    export class Database {
-        constructor(url: string): void
-        set conntection(connection: Connection): void
-        get getConnection(): Connection 
+    class WebSocket {
+        constructor(data: {
+            port: number;
+            path: string;
+            cors: string[];
+        })
+        get stocket(): Server
     }
 
     export class kernel {
@@ -18,7 +23,6 @@ declare module 'und-data-cloud-sequelize' {
         webSocket(data: { port: number; path: string; cors: string[] }): void
         services(serivice: Record<string, any>): kernel
         constructor(data: { port: number, domain: string, urlDatabase: string })
-        get databse(): Database
         configFile(destination: string): kernel
         get Socket(): WebSocket
     }
