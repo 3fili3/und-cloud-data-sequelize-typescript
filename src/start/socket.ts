@@ -5,47 +5,46 @@ import http, { createServer } from 'http'
 export { Socket } from 'socket.io'
 
 export class WebSocket {
+
     private appSocket: Application = null as any
-    private instance: WebSocket = null as any
+    private static Instance: WebSocket = null as any
     private serverHttp: typeof createServer = null as any
     private SocketServer: Server = null as any
 
     public constructor(data: { port: number, path: string, cors: string[] }) {
-        if(this.instance === null) {
-            this.instance = new WebSocket(data)
-            this.instance.AppSocket = express()
-            this.instance.AppSocket.use(cors())
-            this.instance.AppSocket.use(express.json())
-            this.instance.serverHttp = http.createServer(this.instance.AppSocket) as any
-            this.instance.SocketServer = new Server(this.instance.getServerSocket as any, {
-                cors: data.cors as any, path: data.path
-            })
+        if(WebSocket.Instance === null) {
+            WebSocket.Instance = this
+            WebSocket.Instance.AppSocket = express()
+            WebSocket.Instance.AppSocket.use(cors())
+            WebSocket.Instance.AppSocket.use(express.json())
+            WebSocket.Instance.serverHttp = http.createServer(WebSocket.Instance.AppSocket) as any
+            WebSocket.Instance.SocketServer = new Server(WebSocket.Instance.getServerSocket as any, { cors: data.cors as any, path: data.path })
             this.SocketServer.listen(data.port)
             console.log('Server websocket start in port: '+data.port)
         }
     }
 
-    set AppSocket(app: Application){
-        this.appSocket = app
+    set AppSocket(app: Application) { 
+        WebSocket.Instance.appSocket = app
     }
 
     set ServerSocket(server: typeof createServer) {
-        this.serverHttp = server
+        WebSocket.Instance.serverHttp = server
     }
 
     get getServerSocket() {
-        return this.serverHttp
+        return WebSocket.Instance.serverHttp
     }
 
     get getAppSocket() {
-        return this.appSocket
+        return WebSocket.Instance.appSocket
     }
 
     set socketServer(socket: Server) {
-        this.SocketServer = socket
+        WebSocket.Instance.SocketServer = socket
     }
 
     get getSocketServer() {
-        return this.SocketServer
+        return WebSocket.Instance.SocketServer
     }
 }
