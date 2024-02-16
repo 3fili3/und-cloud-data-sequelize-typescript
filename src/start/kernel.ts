@@ -71,7 +71,7 @@ export class kernel {
 
         for (const key in models) {
             setServices(key, models[key])
-            console.log(`>> Intialize Service ${key} <<`)
+            console.log(`>> Intialize Model ${key} <<`)
         }
 
         ContextServices['model'] = getServices()
