@@ -13,11 +13,11 @@ export class WebSocket {
     public constructor(data: { port: number, path: string, cors: string[] }) {
         if(WebSocket.Instance === null) {
             WebSocket.Instance = this
-            const app = express()
+            const appSocket = express()
             WebSocket.Instance.appSocket = express()
-            app.use(cors())
-            app.use(express.json())
-            const createServer = http.createServer(app)
+            appSocket.use(cors())
+            appSocket.use(express.json())
+            const createServer = http.createServer(appSocket)
             WebSocket.Instance.SocketServer = new Server(createServer, { cors: data.cors as any, path: data.path })
             WebSocket.Instance.SocketServer.listen(data.port)
             console.log('Server websocket start in port: '+data.port)
