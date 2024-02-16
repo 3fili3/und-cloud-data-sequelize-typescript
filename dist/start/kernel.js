@@ -90,6 +90,14 @@ class kernel {
     //     initializeSocket(identity)
     //     return this;
     // }
+    models(models) {
+        for (const key in models) {
+            (0, ContexController_1.setServices)(key, models[key]);
+            console.log(`>> Intialize Service ${key} <<`);
+        }
+        ContexController_1.ContextServices['model'] = (0, ContexController_1.getServices)();
+        return this;
+    }
     services(services) {
         for (const key in services) {
             (0, ContexController_1.setServices)(key, new services[key](ContexController_1.ContextServices));

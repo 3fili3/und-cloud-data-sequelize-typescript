@@ -67,6 +67,18 @@ export class kernel {
     //     return this;
     // }
 
+    public models(models: Record<string, any>): kernel {
+
+        for (const key in models) {
+            setServices(key, models[key])
+            console.log(`>> Intialize Service ${key} <<`)
+        }
+
+        ContextServices['model'] = getServices()
+
+        return this
+    }
+
     public services(services: Record<string, ObjectConstructor>): kernel {
 
         for (const key in services) {

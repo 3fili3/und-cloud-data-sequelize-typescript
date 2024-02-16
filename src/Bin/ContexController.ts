@@ -12,7 +12,7 @@ import { IFile } from '../contracts/Files'
 export interface IContextServices {
     code: Code; email: Email; functions: Functions;
     logger: Logger;
-    time: Time; hash: typeof hash;
+    time: Time; hash: typeof hash; model: Record<string, any>
 }
 
 export interface IContextController {
@@ -30,15 +30,24 @@ export let ContextController: IContextController = {
 
 export const ContextServices: IContextServices = { 
     code: new Code(), functions: new Functions(), logger: new Logger(),
-    time: new Time(), hash: hash, email: new Email(), 
+    time: new Time(), hash: hash, email: new Email(),  model: {}
 }
 
 export let Services: Record<string, Object> = {}
+export let Models: Record<string, Object> = {}
 
 export const setServices = (key: string, object: Object) =>  {
     Services[key] = object
 }
 
+export const setModels = (key: string, object: any) => {
+    Models[key] = object
+}
+
 export const getServices = () => {
     return Services
+}
+
+export const getModels = () => {
+    return Models
 }
