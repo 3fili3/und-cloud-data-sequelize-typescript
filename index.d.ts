@@ -33,7 +33,8 @@ declare module 'und-data-cloud-sequelize' {
         max?: number, 
         min?: number,
         required?: boolean,
-        empty?: boolean
+        empty?: boolean,
+        query?: boolean
     }
     
     type InputDefinitions = Record<string, validates>;
