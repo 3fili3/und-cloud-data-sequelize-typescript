@@ -13,6 +13,7 @@ import { People, User } from "../contracts/Models";
 import sequelize from "sequelize";
 import { WebSocket } from "./socket";
 import { Files, IFile } from "../contracts/Files";
+import path from "path";
 
 // La clase kernel tiene como objetivo 
 // contener toda la configuración de la API
@@ -114,9 +115,8 @@ export class kernel {
                                 ContextController['files'] = req.files as IFile[]
                                 const response = await methodController['function'](ContextController)
                                 if(response.hasOwnProperty('file')) {
-                                    const path = `${Files.destination}${response.file}`
-                                    console.log(path)
-                                    return res.sendFile(path)
+                                    const pathRealtive = path.resolve(`${Files.destination}${response.file}`)
+                                    return res.sendFile(pathRealtive)
                                 }
                                 return res.json({ service: response })
                             } catch (error) {
@@ -132,9 +132,8 @@ export class kernel {
                         try {
                             const response = await methodController['function'](ContextController)
                             if(response.hasOwnProperty('file')) {
-                                const path = `${Files.destination}${response.file}`
-                                console.log(path)
-                                return res.sendFile(path)
+                                const pathRealtive = path.resolve(`${Files.destination}${response.file}`)
+                                return res.sendFile(pathRealtive)
                             }
                             return res.json({ service: response })
                         } catch (error) {

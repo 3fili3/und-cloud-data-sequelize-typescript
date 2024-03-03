@@ -46,6 +46,7 @@ const ContexController_1 = require("../Bin/ContexController");
 const Auth_1 = require("../contracts/Auth");
 const socket_1 = require("./socket");
 const Files_1 = require("../contracts/Files");
+const path_1 = __importDefault(require("path"));
 // La clase kernel tiene como objetivo 
 // contener toda la configuración de la API
 // Se usa el patron de diseño Builder
@@ -123,9 +124,8 @@ class kernel {
                             ContexController_1.ContextController['files'] = req.files;
                             const response = yield methodController['function'](ContexController_1.ContextController);
                             if (response.hasOwnProperty('file')) {
-                                const path = `${Files_1.Files.destination}${response.file}`;
-                                console.log(path);
-                                return res.sendFile(path);
+                                const pathRealtive = path_1.default.resolve(`${Files_1.Files.destination}${response.file}`);
+                                return res.sendFile(pathRealtive);
                             }
                             return res.json({ service: response });
                         }
@@ -142,9 +142,8 @@ class kernel {
                         try {
                             const response = yield methodController['function'](ContexController_1.ContextController);
                             if (response.hasOwnProperty('file')) {
-                                const path = `${Files_1.Files.destination}${response.file}`;
-                                console.log(path);
-                                return res.sendFile(path);
+                                const pathRealtive = path_1.default.resolve(`${Files_1.Files.destination}${response.file}`);
+                                return res.sendFile(pathRealtive);
                             }
                             return res.json({ service: response });
                         }
