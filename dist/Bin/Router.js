@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ContextServices = exports.ContextController = exports.routerTemp = exports.Delete = exports.Put = exports.Get = exports.Post = void 0;
+exports.ContextServices = exports.ContextController = exports.routerTemp = exports.File = exports.Delete = exports.Put = exports.Get = exports.Post = void 0;
 // Clase para controlar las rutas
 // La clase tiene como objetivo hacer un Lib
 // Haciendo facilmente el cambio de framewoork 
@@ -21,13 +21,13 @@ var Mehtods;
 })(Mehtods || (Mehtods = {}));
 const routerTemp = (0, express_1.Router)();
 exports.routerTemp = routerTemp;
-const contructorMethod = (target, propertyKey, descriptor, method, path) => {
+const contructorMethod = (target, propertyKey, descriptor, method, path, file) => {
     let routes = target.constructor.prototype.functions;
     if (routes === undefined) {
-        routes = [{ function: target.constructor.prototype[propertyKey], method, path }];
+        routes = [{ function: target.constructor.prototype[propertyKey], method, path, file }];
     }
     else {
-        routes.push({ function: target.constructor.prototype[propertyKey], method, path });
+        routes.push({ function: target.constructor.prototype[propertyKey], method, path, file });
     }
     return routes;
 };
@@ -75,3 +75,15 @@ const Delete = (path) => {
     };
 };
 exports.Delete = Delete;
+const File = (data) => {
+    if (data.method.toUpperCase() === '')
+        throw ({ message: 'Not support Get in decorator File', status: 500 });
+    return function (target, propertyKey, descriptor) {
+        let originalMethod = descriptor.value;
+        descriptor.value = function (contextController) {
+            return originalMethod.call(this, ContexController_1.ContextController);
+        };
+        target.constructor.prototype['functions'] = contructorMethod(target, propertyKey, descriptor, data.method, data.path, true);
+    };
+};
+exports.File = File;

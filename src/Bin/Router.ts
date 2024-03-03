@@ -13,15 +13,16 @@ enum Mehtods { get = "get", post = "post", put = "put", delete = "delete" }
 
 const routerTemp = Router()
 
-const contructorMethod = (target: Object, propertyKey: string, descriptor: PropertyDescriptor, method: string, path: string) => {
-    let routes: { function: Function, method: string, path: string }[] = target.constructor.prototype.functions;
+const contructorMethod = (target: Object, propertyKey: string, descriptor: PropertyDescriptor, method: string, path: string, file?: boolean) => {
+    let routes: { function: Function, method: string, path: string, file?: boolean }[] = target.constructor.prototype.functions;
     if(routes === undefined) {
-        routes = [ { function: target.constructor.prototype[propertyKey], method, path } ]
+        routes = [ { function: target.constructor.prototype[propertyKey], method, path, file } ]
     } else {
-        routes.push({ function: target.constructor.prototype[propertyKey], method, path })
+        routes.push({ function: target.constructor.prototype[propertyKey], method, path, file })
     }
     return routes
 }
+
 
 export const Post = (path: string) => {
     const method = 'post';
@@ -64,6 +65,19 @@ export const Delete = (path: string) => {
           return originalMethod.call(this, ContextController);
         };
         target.constructor.prototype['functions'] = contructorMethod(target, propertyKey, descriptor, method, path)
+    };
+}
+
+export const File = (data: { path: string, method: string }) => {
+
+    if(data.method.toUpperCase() === '') throw({ message: 'Not support Get in decorator File', status: 500 })
+
+    return function (target: Object, propertyKey: string, descriptor: PropertyDescriptor) {
+        let originalMethod = descriptor.value;  
+        descriptor.value = function (contextController: IContextController) {
+          return originalMethod.call(this, ContextController);
+        };
+        target.constructor.prototype['functions'] = contructorMethod(target, propertyKey, descriptor, data.method, data.path, true)
     };
 }
 
