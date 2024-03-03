@@ -92,7 +92,7 @@ class kernel {
     // }
     models(models) {
         for (const key in models) {
-            (0, ContexController_1.setServices)(key, models[key]);
+            (0, ContexController_1.setModels)(key, models[key]);
             console.log(`>> Intialize Model ${key} <<`);
         }
         ContexController_1.ContextServices['model'] = (0, ContexController_1.getModels)();
