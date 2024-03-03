@@ -49,9 +49,15 @@ export class Files {
         return fs.readdirSync(`${Files.destination}/${path}`)
     }
 
-    public removedFile(path: string) {
+    public removedFolder(path: string) {
         if(fs.existsSync(path)) {
             fs.readdirSync(path, { recursive: true })
+        }
+    }
+
+    public removedFile(path: string) {
+        if(fs.existsSync(path)) {
+            fs.unlinkSync(path)
         }
     }
 

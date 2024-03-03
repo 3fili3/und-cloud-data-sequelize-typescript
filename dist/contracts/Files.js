@@ -32,9 +32,14 @@ class Files {
     findFiles(path) {
         return fs_1.default.readdirSync(`${Files.destination}/${path}`);
     }
-    removedFile(path) {
+    removedFolder(path) {
         if (fs_1.default.existsSync(path)) {
             fs_1.default.readdirSync(path, { recursive: true });
+        }
+    }
+    removedFile(path) {
+        if (fs_1.default.existsSync(path)) {
+            fs_1.default.unlinkSync(path);
         }
     }
     static config(data) {

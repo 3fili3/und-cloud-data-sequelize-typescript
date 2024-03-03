@@ -112,7 +112,7 @@ declare module 'und-data-cloud-sequelize' {
             make(data: string):string;
             compare(password: string, password_encryped: string):boolean
         };
-        file: { make(type: TypeActionMake, path: string, file?: any): string, findFiles(path: string): string[], removedFile(path: string): void }
+        file: { make(type: TypeActionMake, path: string, file?: any): string, findFiles(path: string): string[], removedFile(path: string): void, removedFile(path: string): void }
     }
     
 
