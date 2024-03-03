@@ -29,7 +29,7 @@ export class Files {
         try {
             switch (type) {
                 case 'folder':
-                    fs.mkdirSync(`${Files.destination}${path}`)
+                    fs.mkdirSync(`${Files.destination}${path}`, { recursive: true })
                 break;
                 case 'file': 
                     fs.writeFileSync(`${Files.destination}${path}`, file)
@@ -45,7 +45,7 @@ export class Files {
         
     }
 
-    public static config(data: { destination: string }) {
+    public static config(data: { destination: string }) {   
         Files.destination = data.destination
         Files.UploadFiles = multer({ storage: multer.memoryStorage(), dest: data.destination })
     }

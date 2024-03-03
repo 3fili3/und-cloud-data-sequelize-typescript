@@ -14,7 +14,7 @@ class Files {
         try {
             switch (type) {
                 case 'folder':
-                    fs_1.default.mkdirSync(`${Files.destination}${path}`);
+                    fs_1.default.mkdirSync(`${Files.destination}${path}`, { recursive: true });
                     break;
                 case 'file':
                     fs_1.default.writeFileSync(`${Files.destination}${path}`, file);
