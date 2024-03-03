@@ -114,7 +114,8 @@ export class kernel {
                                 ContextController['files'] = req.files as IFile[]
                                 const response = await methodController['function'](ContextController)
                                 if(response.hasOwnProperty('file')) {
-                                    return res.sendFile(`${Files.destination}/${response.file}`)
+                                    const path = `${Files.destination}/${response.file}`
+                                    return res.sendFile(path)
                                 }
                                 return res.json({ service: response })
                             } catch (error) {
@@ -130,7 +131,8 @@ export class kernel {
                         try {
                             const response = await methodController['function'](ContextController)
                             if(response.hasOwnProperty('file')) {
-                                return res.sendFile(`${Files.destination}/${response.file}`)
+                                const path = `${Files.destination}/${response.file}`
+                                return res.sendFile(path)
                             }
                             return res.json({ service: response })
                         } catch (error) {
