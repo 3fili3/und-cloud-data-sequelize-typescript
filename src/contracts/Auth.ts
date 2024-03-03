@@ -19,32 +19,16 @@ export class Auth {
     private static PropiedsSave: string[]
     private static ModulesPermiss: any[] = []
     private static NameModelModule: string;
+    private static Propieds: Object
 
     constructor() {}
 
     // Declaremos un motodo LogIn
     // Este metodo verificara las credenciales del usuario
-    // public async LogIn(email: string, password: string): Promise<string> {
-
-    //     Auth.VerifyConfig()
-    //     const modelUser = new PrismaClient() as any
-    //     const user = await modelUser[Auth.PropiedNameModel as any].findFirst({
-    //         where: {
-    //             [Auth.PropiedUser]: email
-    //         }
-    //     })
-
-    //     if(user === undefined) throw({ message: 'No existe el usuario', status: 200 })
-
-    //     if(!hash.compare(password, user[Auth.PropiedPassword])) throw({ message: 'El usuario y contraseña, son incorrectos', valide: false, status: 200 })
-    //     const token: { [key in string]: string } = {}
-    //     Auth.PropiedsSave.forEach(propied => {
-    //         token[propied] = user[propied]
-    //     })  
-
-    //     return jwt.make(token)
-        
-    // }
+    public async LogIn(functionGetData: () => Promise<Record<string, string>>): Promise<string> {
+        const token: Record<string, string> = await functionGetData()
+        return jwt.make(token)
+    }
 
     // public async createdUser(data: any) {
     //     Auth.VerifyConfig()
@@ -59,40 +43,40 @@ export class Auth {
     //     return await modelUser[Auth.PropiedNameModel as any].create({ data })
     // }
 
-    // public getInfoUser() {
-    //     const token = jwt.verify(Auth.getToken())
-    //     if(token === undefined) throw({ message: 'No tienes autorización', status: 401 })
-    //     const user = token
-    //     return user
-    // }
+    public getInfoUser<User>() {
+        const token = jwt.verify<User>(Auth.getToken())
+        if(token === undefined) throw({ message: 'No tienes autorización', status: 401 })
+        const user = token
+        return user as User
+    }
 
     // public async authModule(model: String, user: Number, permiss: String) {
     //     const modelModuleAuth = new PrismaClient() as any
     //     await modelModuleAuth[Auth.NameModelModule].findMany()
     // }
 
-    // private static getToken(): string {
-    //     const auth = Auth.req.headers['authorization']
+    private static getToken(): string {
+        const auth = Auth.req.headers['authorization']
         
-    //     if(auth != undefined) {
-    //         const token = (auth.split(' '))[1]
-    //         if(token != undefined) {
-    //             return token;
-    //         }
-    //     }
-    //     throw({ message: 'No tienes autorización', status: 401 })
-    // }
+        if(auth != undefined) {
+            const token = (auth.split(' '))[1]
+            if(token != undefined) {
+                return token;
+            }
+        }
+        throw({ message: 'No tienes autorización', status: 401 })
+    }
 
     public static AuthSocket(token: string)  {
         const user = jwt.verify(token);
         return user;
     }
  
-    // public getAuth() {
-    //     const user = jwt.verify(Auth.getToken());
-    //     if(user === undefined) throw({ message: 'No tienes autorización' })
-    //     return user;
-    // }
+    public getAuth() {
+        const user = jwt.verify(Auth.getToken());
+        if(user === undefined) throw({ message: 'No tienes autorización' })
+        return user;
+    }
 
     public static Auth(req: Request, res: Response, next: NextFunction) {
         Auth.req = req
@@ -105,10 +89,13 @@ export class Auth {
        Auth.NameModelModule = model
     }
 
-    public static Config(data: { PropiedUser: string, PropiedPassword:string, NameModel: string }) {
+    public static Config(data: { PropiedUser: string, PropiedPassword:string, NameModel: string, PropiedsSave?: string[] }) {
         Auth.PropiedNameModel = data.NameModel
         Auth.PropiedPassword = data.PropiedPassword
         Auth.PropiedUser = data.PropiedUser
+        if(data.PropiedsSave != undefined ) {
+            Auth.PropiedsSave = data.PropiedsSave
+        } 
     }
 
     public static VerifyConfig() {

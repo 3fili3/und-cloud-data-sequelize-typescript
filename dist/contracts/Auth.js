@@ -20,22 +20,12 @@ class Auth {
     constructor() { }
     // Declaremos un motodo LogIn
     // Este metodo verificara las credenciales del usuario
-    // public async LogIn(email: string, password: string): Promise<string> {
-    //     Auth.VerifyConfig()
-    //     const modelUser = new PrismaClient() as any
-    //     const user = await modelUser[Auth.PropiedNameModel as any].findFirst({
-    //         where: {
-    //             [Auth.PropiedUser]: email
-    //         }
-    //     })
-    //     if(user === undefined) throw({ message: 'No existe el usuario', status: 200 })
-    //     if(!hash.compare(password, user[Auth.PropiedPassword])) throw({ message: 'El usuario y contraseña, son incorrectos', valide: false, status: 200 })
-    //     const token: { [key in string]: string } = {}
-    //     Auth.PropiedsSave.forEach(propied => {
-    //         token[propied] = user[propied]
-    //     })  
-    //     return jwt.make(token)
-    // }
+    LogIn(functionGetData) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const token = yield functionGetData();
+            return Jwt_1.jwt.make(token);
+        });
+    }
     // public async createdUser(data: any) {
     //     Auth.VerifyConfig()
     //     const modelUser = new PrismaClient() as any
@@ -47,35 +37,37 @@ class Auth {
     //     if(user != undefined) throw({ message: 'El usuario ya se encuentra registrado', status: 500 })
     //     return await modelUser[Auth.PropiedNameModel as any].create({ data })
     // }
-    // public getInfoUser() {
-    //     const token = jwt.verify(Auth.getToken())
-    //     if(token === undefined) throw({ message: 'No tienes autorización', status: 401 })
-    //     const user = token
-    //     return user
-    // }
+    getInfoUser() {
+        const token = Jwt_1.jwt.verify(Auth.getToken());
+        if (token === undefined)
+            throw ({ message: 'No tienes autorización', status: 401 });
+        const user = token;
+        return user;
+    }
     // public async authModule(model: String, user: Number, permiss: String) {
     //     const modelModuleAuth = new PrismaClient() as any
     //     await modelModuleAuth[Auth.NameModelModule].findMany()
     // }
-    // private static getToken(): string {
-    //     const auth = Auth.req.headers['authorization']
-    //     if(auth != undefined) {
-    //         const token = (auth.split(' '))[1]
-    //         if(token != undefined) {
-    //             return token;
-    //         }
-    //     }
-    //     throw({ message: 'No tienes autorización', status: 401 })
-    // }
+    static getToken() {
+        const auth = Auth.req.headers['authorization'];
+        if (auth != undefined) {
+            const token = (auth.split(' '))[1];
+            if (token != undefined) {
+                return token;
+            }
+        }
+        throw ({ message: 'No tienes autorización', status: 401 });
+    }
     static AuthSocket(token) {
         const user = Jwt_1.jwt.verify(token);
         return user;
     }
-    // public getAuth() {
-    //     const user = jwt.verify(Auth.getToken());
-    //     if(user === undefined) throw({ message: 'No tienes autorización' })
-    //     return user;
-    // }
+    getAuth() {
+        const user = Jwt_1.jwt.verify(Auth.getToken());
+        if (user === undefined)
+            throw ({ message: 'No tienes autorización' });
+        return user;
+    }
     static Auth(req, res, next) {
         Auth.req = req;
         Auth.res = res;
@@ -91,6 +83,9 @@ class Auth {
         Auth.PropiedNameModel = data.NameModel;
         Auth.PropiedPassword = data.PropiedPassword;
         Auth.PropiedUser = data.PropiedUser;
+        if (data.PropiedsSave != undefined) {
+            Auth.PropiedsSave = data.PropiedsSave;
+        }
     }
     static VerifyConfig() {
         if (Auth.PropiedNameModel === '' || Auth.PropiedNameModel === null || Auth.PropiedNameModel === undefined)
