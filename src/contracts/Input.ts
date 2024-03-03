@@ -20,7 +20,8 @@ interface validates {
     max?: number, 
     min?: number,
     required?: boolean,
-    empty?: boolean
+    empty?: boolean,
+    query?: boolean
 }
 
 type InputDefinitions = Record<string, validates>
@@ -43,8 +44,6 @@ export const input = <T extends InputDefinitions>(value: T) => {
     const inputApi = Input.req as any
     const messageError: { error: string, key: string }[] = []
 
-    
-
     if(inputApi[method] === undefined) {
         for (const key in value) {
             messageError.push({ key, error: 'Input Required' })  
@@ -56,82 +55,87 @@ export const input = <T extends InputDefinitions>(value: T) => {
 
     for (const key in value) {
         let valueTemp = {} as any
-        
-        const objectError: { error: string, key: string } = { error: '', key: '' }
-        if(value[key].hasOwnProperty('required')) {
-            if(value[key].required && !inputApi[method].hasOwnProperty(key) )  {
-                objectError.error = 'Input Required'
-                objectError.key = key
-            }
-        } 
 
-        if(inputApi[method].hasOwnProperty(key)) {
-
-            valueTemp = inputApi[method][key]
-            result[key] = valueTemp
-
-            let inputStringTemp: string = valueTemp as string
-            if(typeof valueTemp != 'string' && typeof valueTemp != 'object') {
-                inputStringTemp = valueTemp.toString()
-            }
-
-            if(value[key].hasOwnProperty('min')) {
-                const numberMin = value[key]?.min as number
-                if(inputStringTemp.length < numberMin) {
-                    objectError.error = `\n min characters ${numberMin}` 
+        if(value[key]?.query) {
+            result[key] = Input.req.query[key] as any
+        } else {
+            const objectError: { error: string, key: string } = { error: '', key: '' }
+            if(value[key].hasOwnProperty('required')) {
+                if(value[key].required && !inputApi[method].hasOwnProperty(key) )  {
+                    objectError.error = 'Input Required'
                     objectError.key = key
                 }
-            }
-            if(value[key].hasOwnProperty('max')) {
-                const numberMax = value[key]?.max as number
-                if(inputStringTemp.length > numberMax) {
-                    objectError.error = `\n Max characters ${numberMax}` 
-                    objectError.key = key
+            } 
+    
+            if(inputApi[method].hasOwnProperty(key)) {
+    
+                valueTemp = inputApi[method][key]
+                result[key] = valueTemp
+    
+                let inputStringTemp: string = valueTemp as string
+                if(typeof valueTemp != 'string' && typeof valueTemp != 'object') {
+                    inputStringTemp = valueTemp.toString()
                 }
-            }
-
-            if(value[key].hasOwnProperty('empty')) {
-                if(!value[key].empty) {
-                    if(valueTemp === '') {
-                        objectError.error = `\nInput not empty` 
+    
+                if(value[key].hasOwnProperty('min')) {
+                    const numberMin = value[key]?.min as number
+                    if(inputStringTemp.length < numberMin) {
+                        objectError.error = `\n min characters ${numberMin}` 
                         objectError.key = key
                     }
                 }
+                if(value[key].hasOwnProperty('max')) {
+                    const numberMax = value[key]?.max as number
+                    if(inputStringTemp.length > numberMax) {
+                        objectError.error = `\n Max characters ${numberMax}` 
+                        objectError.key = key
+                    }
+                }
+    
+                if(value[key].hasOwnProperty('empty')) {
+                    if(!value[key].empty) {
+                        if(valueTemp === '') {
+                            objectError.error = `\nInput not empty` 
+                            objectError.key = key
+                        }
+                    }
+                }
+    
+               switch (value[key].type) {
+                case String:
+                    if(typeof valueTemp != 'string') {
+                        objectError.error = `\nInput data type must be String` 
+                        objectError.key = key
+                    }
+                break;
+                case Number:
+                    if(typeof valueTemp != 'number') {
+                        objectError.error = `\nInput data type must be Number` 
+                        objectError.key = key
+                    }
+                break
+                case Array:
+                    if(typeof valueTemp != 'object') {
+                        objectError.error = `\nInput data type must be Array` 
+                        objectError.key = key
+                    }
+                break;
+                case Object:
+                    if(typeof valueTemp != 'object') {
+                        objectError.error = `\nInput data type must be Object` 
+                        objectError.key = key
+                    }
+                break;
+                default:
+                break;
+               }
+    
+            }
+    
+            if(objectError.key != '') {
+                messageError.push(objectError)
             }
 
-           switch (value[key].type) {
-            case String:
-                if(typeof valueTemp != 'string') {
-                    objectError.error = `\nInput data type must be String` 
-                    objectError.key = key
-                }
-            break;
-            case Number:
-                if(typeof valueTemp != 'number') {
-                    objectError.error = `\nInput data type must be Number` 
-                    objectError.key = key
-                }
-            break
-            case Array:
-                if(typeof valueTemp != 'object') {
-                    objectError.error = `\nInput data type must be Array` 
-                    objectError.key = key
-                }
-            break;
-            case Object:
-                if(typeof valueTemp != 'object') {
-                    objectError.error = `\nInput data type must be Object` 
-                    objectError.key = key
-                }
-            break;
-            default:
-            break;
-           }
-
-        }
-
-        if(objectError.key != '') {
-            messageError.push(objectError)
         }
 
     }
