@@ -33,14 +33,14 @@ class Files {
         return fs_1.default.readdirSync(`${Files.destination}/${path}`);
     }
     removedFolder(path) {
-        fs_1.default.readdirSync(path, { recursive: true });
-        // if(fs.existsSync(path)) {
-        // }
+        if (fs_1.default.existsSync(`${Files.destination}/${path}`)) {
+            fs_1.default.readdirSync(`${Files.destination}/${path}`, { recursive: true });
+        }
     }
     removedFile(path) {
-        fs_1.default.unlinkSync(path);
-        // if(fs.existsSync(path)) {
-        // }
+        if (fs_1.default.existsSync(`${Files.destination}/${path}`)) {
+            fs_1.default.unlinkSync(`${Files.destination}/${path}`);
+        }
     }
     static config(data) {
         Files.destination = data.destination;

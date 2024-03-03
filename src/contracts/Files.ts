@@ -50,15 +50,15 @@ export class Files {
     }
 
     public removedFolder(path: string) {
-        fs.readdirSync(path, { recursive: true })
-        // if(fs.existsSync(path)) {
-        // }
+        if(fs.existsSync(`${Files.destination}/${path}`)) {
+            fs.readdirSync(`${Files.destination}/${path}`, { recursive: true })
+        }
     }
 
     public removedFile(path: string) {
-        fs.unlinkSync(path)
-        // if(fs.existsSync(path)) {
-        // }
+        if(fs.existsSync(`${Files.destination}/${path}`)) {
+            fs.unlinkSync(`${Files.destination}/${path}`)
+        }
     }
 
     public static config(data: { destination: string }) {   
