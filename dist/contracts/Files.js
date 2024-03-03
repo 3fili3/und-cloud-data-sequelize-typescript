@@ -29,6 +29,14 @@ class Files {
             throw ({ message: 'Error al crear Directorio de Usuario', status: 501 });
         }
     }
+    findFiles(path) {
+        return fs_1.default.readdirSync(path);
+    }
+    removedFile(path) {
+        if (fs_1.default.existsSync(path)) {
+            fs_1.default.readdirSync(path, { recursive: true });
+        }
+    }
     static config(data) {
         Files.destination = data.destination;
         Files.UploadFiles = (0, multer_1.default)({ storage: multer_1.default.memoryStorage(), dest: data.destination });

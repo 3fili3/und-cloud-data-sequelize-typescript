@@ -45,6 +45,16 @@ export class Files {
         
     }
 
+    public findFiles(path: string) {
+        return fs.readdirSync(path)
+    }
+
+    public removedFile(path: string) {
+        if(fs.existsSync(path)) {
+            fs.readdirSync(path, { recursive: true })
+        }
+    }
+
     public static config(data: { destination: string }) {   
         Files.destination = data.destination
         Files.UploadFiles = multer({ storage: multer.memoryStorage(), dest: data.destination })
