@@ -62,6 +62,9 @@ class Auth {
         const user = Jwt_1.jwt.verify(token);
         return user;
     }
+    getToken() {
+        return Auth.getToken();
+    }
     getAuth() {
         const user = Jwt_1.jwt.verify(Auth.getToken());
         if (user === undefined)

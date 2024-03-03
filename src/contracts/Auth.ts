@@ -71,6 +71,10 @@ export class Auth {
         const user = jwt.verify(token);
         return user;
     }
+
+    public getToken() {
+        return Auth.getToken()
+    }
  
     public getAuth() {
         const user = jwt.verify(Auth.getToken());
