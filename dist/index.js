@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Put = exports.Post = exports.Get = exports.Delete = exports.ContextServices = exports.ContextController = exports.kernel = void 0;
+exports.File = exports.Put = exports.Post = exports.Get = exports.Delete = exports.ContextServices = exports.ContextController = exports.kernel = void 0;
 var kernel_1 = require("./start/kernel");
 Object.defineProperty(exports, "kernel", { enumerable: true, get: function () { return kernel_1.kernel; } });
 var Router_1 = require("./Bin/Router");
@@ -10,3 +10,4 @@ Object.defineProperty(exports, "Delete", { enumerable: true, get: function () { 
 Object.defineProperty(exports, "Get", { enumerable: true, get: function () { return Router_1.Get; } });
 Object.defineProperty(exports, "Post", { enumerable: true, get: function () { return Router_1.Post; } });
 Object.defineProperty(exports, "Put", { enumerable: true, get: function () { return Router_1.Put; } });
+Object.defineProperty(exports, "File", { enumerable: true, get: function () { return Router_1.File; } });
