@@ -123,7 +123,7 @@ class kernel {
                             ContexController_1.ContextController['files'] = req.files;
                             const response = yield methodController['function'](ContexController_1.ContextController);
                             if (response.hasOwnProperty('file')) {
-                                return res.sendFile(response.file);
+                                return res.sendFile(`${Files_1.Files.destination}/${response.file}`);
                             }
                             return res.json({ service: response });
                         }
@@ -140,7 +140,7 @@ class kernel {
                         try {
                             const response = yield methodController['function'](ContexController_1.ContextController);
                             if (response.hasOwnProperty('file')) {
-                                return res.sendFile(response.file);
+                                return res.sendFile(`${Files_1.Files.destination}/${response.file}`);
                             }
                             return res.json({ service: response });
                         }
