@@ -60,7 +60,7 @@ declare module 'und-data-cloud-sequelize' {
 
     export interface IContextController {
         auth: {
-            LogIn<Data>(user: string, password: string, functionGetData?: (data: Data) => Promise<Record<string, string>> ): Promise<string>;
+            LogIn<>(functionGetData: () => Promise<Record<string, string>> ): Promise<string>;
             createdUser(data: any): any
             getInfoUser<User>(): User
             getToken(): string
