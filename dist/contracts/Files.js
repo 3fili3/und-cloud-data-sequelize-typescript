@@ -30,7 +30,7 @@ class Files {
         }
     }
     findFiles(path) {
-        return fs_1.default.readdirSync(path);
+        return fs_1.default.readdirSync(`${Files.destination}/${path}`);
     }
     removedFile(path) {
         if (fs_1.default.existsSync(path)) {

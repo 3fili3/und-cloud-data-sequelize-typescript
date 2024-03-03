@@ -46,7 +46,7 @@ export class Files {
     }
 
     public findFiles(path: string) {
-        return fs.readdirSync(path)
+        return fs.readdirSync(`${Files.destination}/${path}`)
     }
 
     public removedFile(path: string) {
