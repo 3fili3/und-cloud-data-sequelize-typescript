@@ -6,7 +6,7 @@ import express, { Application, Router } from "express";
 import { ENV } from "../config/Env";
 import { handles } from "../app/Exceptions/Handles";
 import { Input } from "../contracts/Input";
-import { ContextController, ContextServices, getServices, setServices } from '../Bin/ContexController'
+import { ContextController, ContextServices, getServices, setServices, getModels } from '../Bin/ContexController'
 import { Auth } from "../contracts/Auth";
 import { Database } from "../contracts/Database";
 import { People, User } from "../contracts/Models";
@@ -74,7 +74,7 @@ export class kernel {
             console.log(`>> Intialize Model ${key} <<`)
         }
 
-        ContextServices['model'] = getServices()
+        ContextServices['model'] = getModels()
 
         return this
     }

@@ -95,7 +95,7 @@ class kernel {
             (0, ContexController_1.setServices)(key, models[key]);
             console.log(`>> Intialize Model ${key} <<`);
         }
-        ContexController_1.ContextServices['model'] = (0, ContexController_1.getServices)();
+        ContexController_1.ContextServices['model'] = (0, ContexController_1.getModels)();
         return this;
     }
     services(services) {
