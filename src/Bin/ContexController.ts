@@ -7,12 +7,12 @@ import { Logger } from '../contracts/Logger'
 import { ENV } from '../config/Env'
 import { Time } from '../contracts/Time'
 import { hash } from '../contracts/Hash'
-import { IFile } from '../contracts/Files'
+import { Files, IFile } from '../contracts/Files'
 
 export interface IContextServices {
     code: Code; email: Email; functions: Functions;
     logger: Logger;
-    time: Time; hash: typeof hash; model: Record<string, any>
+    time: Time; hash: typeof hash; model: Record<string, any>, file: Files
 }
 
 export interface IContextController {
@@ -30,7 +30,7 @@ export let ContextController: IContextController = {
 
 export const ContextServices: IContextServices = { 
     code: new Code(), functions: new Functions(), logger: new Logger(),
-    time: new Time(), hash: hash, email: new Email(),  model: {}
+    time: new Time(), hash: hash, email: new Email(),  model: {}, file: new Files()
 }
 
 export let Services: Record<string, Object> = {}
