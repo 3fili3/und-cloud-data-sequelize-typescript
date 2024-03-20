@@ -17,6 +17,9 @@ class Files {
                     fs_1.default.mkdirSync(`${Files.destination}${path}`, { recursive: true });
                     break;
                 case 'file':
+                    if (!fs_1.default.existsSync(`${Files.destination}${path}`)) {
+                        fs_1.default.mkdirSync('', { recursive: true });
+                    }
                     fs_1.default.writeFileSync(`${Files.destination}${path}`, file);
                     break;
                 default:

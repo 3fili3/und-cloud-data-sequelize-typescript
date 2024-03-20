@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Code = void 0;
 class Code {
     generated(numberFor) {
-        const data = "abcdefghijklmnñopqrsxyz123456789";
+        const data = "abcdefghijklmnopqrsxyz123456789";
         let numberMax = 4;
         if (numberFor != undefined) {
             numberMax = numberFor;

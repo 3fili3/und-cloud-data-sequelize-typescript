@@ -32,6 +32,9 @@ export class Files {
                     fs.mkdirSync(`${Files.destination}${path}`, { recursive: true })
                 break;
                 case 'file': 
+                    if(!fs.existsSync(`${Files.destination}${path}`)) {
+                        fs.mkdirSync('', { recursive: true })
+                    }
                     fs.writeFileSync(`${Files.destination}${path}`, file)
                 break;
                 default:

@@ -5,7 +5,7 @@
 export class Code {
 
     public generated(numberFor?: number): string {
-        const data = "abcdefghijklmnñopqrsxyz123456789"
+        const data = "abcdefghijklmnopqrsxyz123456789"
         let numberMax = 4
         if(numberFor != undefined) {
             numberMax = numberFor
