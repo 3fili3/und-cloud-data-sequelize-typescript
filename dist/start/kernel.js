@@ -77,11 +77,11 @@ class kernel {
         this.App.use(Input_1.Input.setContext);
         this.App.use(express_1.default.json());
         this.App.use(express_1.default.urlencoded({ extended: false }));
-        this.App.use(this.Routers);
-        this.App.use(Handles_1.handles.error);
         if (otherMiddleware != undefined) {
             this.App = otherMiddleware(this.getApp, express_1.default);
         }
+        this.App.use(this.Routers);
+        this.App.use(Handles_1.handles.error);
         return this;
     }
     get getApp() {

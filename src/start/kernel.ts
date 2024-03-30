@@ -33,7 +33,7 @@ export class kernel {
     private Domain: string;
     private socket: WebSocket = null as any
 
-    public constructor(data: { port: number, domain: string, urlDatabase: string }) {
+    public constructor(data: { port: number, domain: string }) {
         this.Routers = Router()
         this.ErrorConsole = false
         this.Port = data.port
@@ -50,11 +50,11 @@ export class kernel {
         this.App.use(Input.setContext)
         this.App.use(express.json());
         this.App.use(express.urlencoded({ extended: false }))
-        this.App.use(this.Routers)
-        this.App.use(handles.error)
         if(otherMiddleware != undefined) {
             this.App = otherMiddleware(this.getApp, express)
         }
+        this.App.use(this.Routers)
+        this.App.use(handles.error)
 
         return this;
     }

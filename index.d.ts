@@ -22,7 +22,7 @@ declare module 'und-data-cloud-sequelize' {
         controllers(controllers: Record<string, any>): kernel
         webSocket(data: { port: number; path: string; cors: string[] }): WebSocket
         services(serivice: Record<string, any>): kernel
-        constructor(data: { port: number, domain: string, urlDatabase: string })
+        constructor(data: { port: number, domain: string })
         configFile(destination: string): kernel
         models(models: Record<string, any>): kernel
         get Socket(): WebSocket
