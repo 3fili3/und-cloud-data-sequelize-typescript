@@ -17,10 +17,10 @@ class Files {
                     fs_1.default.mkdirSync(`${Files.destination}${path}`, { recursive: true });
                     break;
                 case 'file':
-                    if (!fs_1.default.existsSync(`${Files.destination}${path}`)) {
-                        fs_1.default.mkdirSync(`${Files.destination}${path}`, { recursive: true });
-                    }
-                    fs_1.default.writeFileSync(`${Files.destination}${path}`, file);
+                    // if(!fs.existsSync(`${Files.destination}${path}`)) {
+                    //     fs.mkdirSync(`${Files.destination}${path}`, { recursive: true })
+                    // }
+                    fs_1.default.writeFileSync(`${Files.destination}${path}`, file, { encoding: "utf-8" });
                     break;
                 default:
                     throw ({ message: 'No existe la acción make de Files', status: 501 });
