@@ -22,7 +22,7 @@ type TypeActionMake = 'folder' | 'file'
 
 export class Files {
     // Destino donde se va guardar facturas enviadas del vendedor
-    public static destination = path.join(`${__dirname}/buket`)
+    public static destination = path.join(`${__dirname}/buket/`)
     public static UploadFiles = multer({ dest: Files.destination, storage: multer.memoryStorage() })
 
     public make(type: TypeActionMake, path: string, file?: any): string {
@@ -33,7 +33,7 @@ export class Files {
                 break;
                 case 'file': 
                     if(!fs.existsSync(`${Files.destination}${path}`)) {
-                        fs.mkdirSync('', { recursive: true })
+                        fs.mkdirSync(`${Files.destination}${path}`, { recursive: true })
                     }
                     fs.writeFileSync(`${Files.destination}${path}`, file)
                 break;
@@ -43,7 +43,7 @@ export class Files {
             }
             return path
         } catch (error) {
-            throw({ message: 'Error al crear Directorio de Usuario', status: 501 })
+            throw({ message: error, status: 501 })
         }
         
     }

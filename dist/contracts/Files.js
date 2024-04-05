@@ -18,7 +18,7 @@ class Files {
                     break;
                 case 'file':
                     if (!fs_1.default.existsSync(`${Files.destination}${path}`)) {
-                        fs_1.default.mkdirSync('', { recursive: true });
+                        fs_1.default.mkdirSync(`${Files.destination}${path}`, { recursive: true });
                     }
                     fs_1.default.writeFileSync(`${Files.destination}${path}`, file);
                     break;
@@ -29,7 +29,7 @@ class Files {
             return path;
         }
         catch (error) {
-            throw ({ message: 'Error al crear Directorio de Usuario', status: 501 });
+            throw ({ message: error, status: 501 });
         }
     }
     findFiles(path) {
@@ -52,5 +52,5 @@ class Files {
 }
 exports.Files = Files;
 // Destino donde se va guardar facturas enviadas del vendedor
-Files.destination = path_1.default.join(`${__dirname}/buket`);
+Files.destination = path_1.default.join(`${__dirname}/buket/`);
 Files.UploadFiles = (0, multer_1.default)({ dest: Files.destination, storage: multer_1.default.memoryStorage() });
